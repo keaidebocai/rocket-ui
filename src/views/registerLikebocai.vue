@@ -10,7 +10,8 @@
                         邮箱登录
                     </p>
                     <div class="likebocai-input-box">
-                        <input :disabled="registerData.isDisposed" class="likebocai-input" type="text" v-model="registerData.emial" placeholder="请输入邮箱" />
+                        <input :disabled="registerData.isDisposed" class="likebocai-input" type="text"
+                            v-model="registerData.emial" placeholder="请输入邮箱" />
                         <div class="login-suffix-box">
 
                         </div>
@@ -18,67 +19,36 @@
 
                 </div>
                 <!-- 邮箱验证码 -->
-                <div class="login-input-box">
-                    <p class="login-prefix">
-                        验证码
+                <LikebocaiInput v-model="registerData.code" :type="'text'" :prefixTitle="'验证码'" :placeholder="'请输入验证码'">
+                    <p @click="getCode" style="color: #bfbfbf;"
+                        :style="{ color: registerData.emial.length <= 0 ? '#bfbfbf' : '#527fad', cursor: registerData.emial.length <= 0 || registerData.isDisposed ? 'not-allowed' : 'pointer' }">
+                        {{ registerData.isDisposed ? `${registerData.time}s` : '获取手机验证码' }}
                     </p>
-                    <div class="likebocai-input-box">
-                        <input class="likebocai-input" type="text" v-model="registerData.code" placeholder="请输入验证码" />
-                        <div class="login-suffix-box">
-                            <p @click="getCode" style="color: #bfbfbf;" :style="{ color: registerData.emial.length <= 0 ? '#bfbfbf' : '#527fad', cursor: registerData.emial.length <= 0 || registerData.isDisposed ? 'not-allowed' : 'pointer'}">
-                                {{ registerData.isDisposed ?  `${registerData.time}s` : '获取手机验证码' }}
-                            </p>
-                        </div>
+                </LikebocaiInput>
+                <!-- 昵称 -->
+                <LikebocaiInput v-model="registerData.nickName" :prefixTitle="'昵称'" :placeholder="'请输入昵称'" />
+                <!-- 密码 -->
+                <LikebocaiInput v-model="registerData.password" :type="!registerData.pwdLook ? 'text' : 'password'"
+                    :prefixTitle="'密码'" :placeholder="'请输入密码'">
+                    <div v-if="registerData.password.length > 0" @click="registerData.pwdLook = !registerData.pwdLook"
+                        style="cursor: pointer;">
+                        <ElIconView width="20" v-if="!registerData.pwdLook" />
+                        <ElIconHide width="20" v-else />
                     </div>
-                </div>
-                <!-- 邮箱验证码 -->
-                <div class="login-input-box">
-                    <p class="login-prefix">
-                        昵称
-                    </p>
-                    <div class="likebocai-input-box">
-                        <input class="likebocai-input" type="text" v-model="registerData.nickName"
-                            placeholder="请输入昵称" />
-                        <div class="login-suffix-box">
+                </LikebocaiInput>
+                <!-- 再次输入密码 -->
+                <LikebocaiInput v-model="registerData.checkPassword"
+                    :type="!registerData.checkPwdLook ? 'text' : 'password'" :prefixTitle="'确认密码'"
+                    :placeholder="'请输入再次输入密码'">
+                    <div v-if="registerData.checkPassword.length > 0"
+                        @click="registerData.checkPwdLook = !registerData.checkPwdLook" style="cursor: pointer;">
+                        <ElIconView width="20" v-if="!registerData.checkPwdLook" />
+                        <ElIconHide width="20" v-else />
+                    </div>
+                </LikebocaiInput>
 
-                        </div>
-                    </div>
-
-                </div>
-                <!-- 邮箱验证码 -->
-                <div class="login-input-box">
-                    <p class="login-prefix">
-                        密码
-                    </p>
-                    <div class="likebocai-input-box">
-                        <input class="likebocai-input" :type="!registerData.pwdLook ? 'text' : 'password'"
-                            v-model="registerData.password" placeholder="请输入密码" />
-                        <div class="login-suffix-box">
-                            <div v-if="registerData.password.length > 0" @click="registerData.pwdLook = !registerData.pwdLook" style="cursor: pointer;">
-                                <ElIconView width="20" v-if="!registerData.pwdLook"/>
-                                <ElIconHide width="20" v-else />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- 邮箱验证码 -->
-                <div class="login-input-box">
-                    <p class="login-prefix">
-                        确认密码
-                    </p>
-                    <div class="likebocai-input-box">
-                        <input class="likebocai-input" :type="!registerData.checkPwdLook ? 'text' : 'password'"
-                            v-model="registerData.checkPassword" placeholder="请输入再次输入密码" />
-                        <div class="login-suffix-box">
-                            <div v-if="registerData.checkPassword.length > 0" @click="registerData.checkPwdLook = !registerData.checkPwdLook" style="cursor: pointer;">
-                                <ElIconView width="20" v-if="!registerData.checkPwdLook" />
-                                <ElIconHide width="20" v-else />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <ElButton :disabled="!registerData.isAgree" type="primary" style="width: 200px;height: 50px;margin-top: 40px;border-radius: 25px;font-size: 18px;margin-bottom: 20px;">
+                <ElButton :disabled="!registerData.isAgree" type="primary"
+                    style="width: 200px;height: 50px;margin-top: 40px;border-radius: 25px;font-size: 18px;margin-bottom: 20px;">
                     注册
                 </ElButton>
                 <div style="height: 30px;display: flex;justify-content: center;align-items: center;">
@@ -93,8 +63,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElButton, ElIcon, ElInput, ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
+import { ElButton, ElMessage } from 'element-plus';
+import { reactive } from 'vue';
+import LikebocaiInput from '../components/likebocai/input.vue'
 
 const registerData = reactive({
     emial: '',
@@ -109,7 +80,7 @@ const registerData = reactive({
     time: 10
 })
 const getCode = () => {
-    if(registerData.emial.length <= 0) {
+    if (registerData.emial.length <= 0) {
         return;
     }
     registerData.isDisposed = true
@@ -118,14 +89,14 @@ const getCode = () => {
 }
 
 const handleTime = () => {
-    if(registerData.time <= 0) {
+    if (registerData.time <= 0) {
         registerData.isDisposed = false
         registerData.time = 10
     } else {
         setTimeout(() => {
             registerData.time--
             handleTime()
-        },1000)
+        }, 1000)
     }
 }
 </script>
@@ -195,10 +166,6 @@ const handleTime = () => {
                     align-items: center;
                 }
             }
-
-
-
-
         }
     }
 }
